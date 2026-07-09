@@ -14,16 +14,269 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      books: {
+        Row: {
+          author: string
+          available_copies: number
+          category: string
+          cover_url: string | null
+          created_at: string
+          id: string
+          isbn: string | null
+          published_year: number | null
+          publisher: string | null
+          title: string
+          total_copies: number
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          available_copies?: number
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          isbn?: string | null
+          published_year?: number | null
+          publisher?: string | null
+          title: string
+          total_copies?: number
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          available_copies?: number
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          isbn?: string | null
+          published_year?: number | null
+          publisher?: string | null
+          title?: string
+          total_copies?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      issues: {
+        Row: {
+          book_id: string
+          created_at: string
+          due_date: string
+          fine_amount: number
+          id: string
+          issue_date: string
+          issued_by: string | null
+          return_date: string | null
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          due_date: string
+          fine_amount?: number
+          id?: string
+          issue_date?: string
+          issued_by?: string | null
+          return_date?: string | null
+          status?: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          due_date?: string
+          fine_amount?: number
+          id?: string
+          issue_date?: string
+          issued_by?: string | null
+          return_date?: string | null
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "issues_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "issues_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      library_settings: {
+        Row: {
+          fine_per_day: number
+          id: number
+          library_name: string
+          loan_period_days: number
+          max_books_per_student: number
+          updated_at: string
+        }
+        Insert: {
+          fine_per_day?: number
+          id?: number
+          library_name?: string
+          loan_period_days?: number
+          max_books_per_student?: number
+          updated_at?: string
+        }
+        Update: {
+          fine_per_day?: number
+          id?: number
+          library_name?: string
+          loan_period_days?: number
+          max_books_per_student?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          created_at: string
+          department: string | null
+          email: string | null
+          full_name: string
+          id: string
+          phone: string | null
+          roll_number: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          phone?: string | null
+          roll_number: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone?: string | null
+          roll_number?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      waiting_queue: {
+        Row: {
+          book_id: string
+          fulfilled: boolean
+          id: string
+          requested_at: string
+          student_id: string
+        }
+        Insert: {
+          book_id: string
+          fulfilled?: boolean
+          id?: string
+          requested_at?: string
+          student_id: string
+        }
+        Update: {
+          book_id?: string
+          fulfilled?: boolean
+          id?: string
+          requested_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waiting_queue_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "waiting_queue_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      issue_book: {
+        Args: { _book_id: string; _due_date: string; _student_id: string }
+        Returns: string
+      }
+      return_book: { Args: { _issue_id: string }; Returns: number }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "librarian"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +403,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "librarian"],
+    },
   },
 } as const
